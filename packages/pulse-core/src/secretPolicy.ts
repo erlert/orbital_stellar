@@ -34,6 +34,14 @@ export class MainnetSecretInRestrictedPathError extends Error {
 /** Where the secret is about to be used. */
 export type SecretPolicyContext = "demo" | "ci";
 
+/**
+ * Inputs to {@link assertRestrictedSecretNetwork}: the name of the secret's
+ * environment variable (used in the error message), the network passphrase the
+ * process is configured with, and which restricted path (`demo` or `ci`) is
+ * about to use the key.
+ *
+ * @see assertRestrictedSecretNetwork
+ */
 export type AssertRestrictedSecretOptions = {
   /** Name of the environment variable holding the secret, for the message. */
   secretName: string;

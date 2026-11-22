@@ -1,5 +1,11 @@
 import { CursorStore } from "./CursorStore.js";
 
+/**
+ * Outcome of {@link migrateCursors}: `migrated` is the number of cursors that
+ * were read from the source store and written to the target.
+ *
+ * @see migrateCursors
+ */
 export interface MigrateCursorsResult {
   migrated: number;
 }

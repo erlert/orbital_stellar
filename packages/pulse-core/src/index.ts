@@ -66,8 +66,14 @@ export {
 export { fullJitterBackoffMs } from "./backoff.js";
 export type { SorobanRpcErrorCode, SorobanRpcErrorOptions } from "./errors.js";
 export { StrKey } from "@stellar/stellar-sdk";
-// Re-exported so @orbital-stellar/anchor-sdk can validate SEP-10 challenges
-// without taking its own direct dependency on @stellar/stellar-sdk.
+/**
+ * SEP-10 Web Authentication helper from `@stellar/stellar-sdk`.
+ *
+ * Re-exported so `@orbital-stellar/anchor-sdk` can build and validate SEP-10
+ * challenge transactions (e.g. `WebAuth.readChallengeTx`) without taking its
+ * own direct dependency on `@stellar/stellar-sdk`. Use it when you need to
+ * verify an anchor's challenge; pulse-core itself does not use it.
+ */
 export { WebAuth } from "@stellar/stellar-sdk";
 export { CursorStore } from "./CursorStore.js";
 export type { CursorStoreLike } from "./CursorStore.js";
@@ -357,6 +363,10 @@ export type BumpSequenceEvent = {
   raw?: RawHorizonBumpSequence;
 } & ClassicEventIdentity;
 
+/**
+ * One claimant of a claimable balance: the account that may claim it and the
+ * predicate that must hold for the claim to succeed.
+ */
 export type ClaimableBalanceClaimant = {
   destination: AccountAddress;
   predicate: ClaimPredicate;
@@ -408,6 +418,10 @@ export type DataEvent = {
   raw?: RawHorizonManageData;
 } & ClassicEventIdentity;
 
+/**
+ * One side of a liquidity-pool deposit or withdrawal: the asset and the amount
+ * of it deposited or received.
+ */
 export type LiquidityPoolReserve = {
   asset: string;
   amount: StellarAmount;
@@ -526,6 +540,15 @@ export type AccountMergeEvent = {
 // Anchor Events (SEP-24, SEP-31)
 // ---------------------------------------------------------------------------
 
+/**
+ * The status strings a SEP-24 anchor reports for a deposit or withdrawal
+ * transaction, as defined by SEP-24.
+ *
+ * Carried verbatim in {@link AnchorFlowEvent.protocolStatus} (and the legacy
+ * {@link AnchorTransactionEvent.protocol_status}) so consumers can see exactly
+ * what the anchor said; the normalized lifecycle stage lives in the event
+ * `type` / `stage`.
+ */
 export type Sep24Status =
   | "incomplete"
   | "pending_user_transfer_start"
@@ -543,6 +566,14 @@ export type Sep24Status =
   | "too_large"
   | "error";
 
+/**
+ * The status strings a SEP-31 anchor reports for a cross-border payment
+ * transaction, as defined by SEP-31.
+ *
+ * Carried verbatim in {@link AnchorFlowEvent.protocolStatus} (and the legacy
+ * {@link AnchorTransactionEvent.protocol_status}); the normalized lifecycle
+ * stage lives in the event `type` / `stage`.
+ */
 export type Sep31Status =
   | "pending_sender"
   | "pending_stellar"
@@ -617,6 +648,11 @@ export type AnchorPaymentEventType =
   | "anchor.payment.refunded"
   | "anchor.payment.failed";
 
+/**
+ * Every `anchor.*` event type: the union of the SEP-24 deposit, SEP-24
+ * withdrawal and SEP-31 payment event types, each combining a flow with an
+ * {@link AnchorFlowStage}.
+ */
 export type AnchorFlowEventType =
   AnchorDepositEventType | AnchorWithdrawalEventType | AnchorPaymentEventType;
 
@@ -1037,6 +1073,12 @@ export type SubscribeOptions = {
 // Contract events (Phase 1 - Soroban)
 // ---------------------------------------------------------------------------
 
+/**
+ * The normalized `type` values of Soroban contract events: `contract.invoked`
+ * for a contract function call and `contract.emitted` for a contract-emitted
+ * event. Used to filter contract subscriptions and to narrow
+ * {@link NormalizedEvent}.
+ */
 export type ContractEventType = "contract.invoked" | "contract.emitted";
 
 /**
